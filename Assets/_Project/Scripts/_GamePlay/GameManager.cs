@@ -1,6 +1,7 @@
 using CodeStage.AdvancedFPSCounter;
 using DG.Tweening;
 using Pancake.GameService;
+using Pattern.Observer;
 using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
@@ -20,6 +21,32 @@ public class GameManager : Singleton<GameManager>
         DontDestroyOnLoad(this);
         ReturnHome();
         EventController.CurrentLevelChanged += UpdateScore;
+    }
+    private void OnEnable()
+    {
+
+
+        EventDispatcher.AddListener(EventName.OnWinGame, OnEventWinGame);
+        EventDispatcher.AddListener(EventName.OnLoseGame, OnEventLoseGame);
+        //EventDispatcher.AddListener(EventName.OnStartDraw, OnEventStartGame);
+        //EventDispatcher.AddListener(EventName.OnCompleteDraw, OnEventCompleteDraw);
+    }
+    private void OnDisable()
+    {
+        //sqDelay?.Kill();
+        EventDispatcher.RemoveListener(EventName.OnWinGame, OnEventWinGame);
+        EventDispatcher.RemoveListener(EventName.OnLoseGame, OnEventLoseGame);
+        //EventDispatcher.RemoveListener(EventName.OnStartDraw, OnEventStartGame);
+        //EventDispatcher.AddListener(EventName.OnCompleteDraw, OnEventCompleteDraw);
+    }
+
+    private void OnEventWinGame(EventName e, object data)
+    {
+        OnWinGame();
+    }
+    private void OnEventLoseGame(EventName e, object data)
+    {
+        OnLoseGame();
     }
 
     public void PlayCurrentLevel()
